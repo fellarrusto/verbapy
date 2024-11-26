@@ -13,6 +13,8 @@ app = FastAPI()
 # Variabili globali
 proc = None
 proc_lock = threading.Lock()
+anagrammer_binary = '/app/anagrammer_listener'
+dictionary_file = '/app/dictionary/wordlist95000_ITA_sign.json'
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -21,7 +23,7 @@ async def lifespan(app: FastAPI):
         # Avvia il processo
         logger.info("Avvio del processo...")
         proc = subprocess.Popen(
-            ["./anagrammer_listener", "dictionary/wordlist95000_ITA_sign.json"],
+            [anagrammer_binary, dictionary_file],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,

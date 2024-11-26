@@ -4,9 +4,9 @@ import itertools
 import unicodedata
 
 class Anagrammer:
-    def __init__(self, signature_dict):
+    def __init__(self, dictionary_file):
         # Load the signature dictionary
-        self.signature_dict = signature_dict
+        self.signature_dict = self.load_signature_dictionary(dictionary_file)
         # Prepare the list of signatures with their counts and associated words
         self.prepare_signatures()
 
@@ -111,27 +111,26 @@ class Anagrammer:
                 if len(results) >= max_results:
                     break
 
-
-
-
-def build_signature_dictionary(wordlist_filename, json_filename):
-    signature_dict = {}
-    with open(wordlist_filename, 'r', encoding='utf-8') as f:
-        for line in f:
-            word = line.strip()
-            if word:
-                # Strip accents from the word
-                word_no_accents = Anagrammer.strip_accents(word.lower())
-                # Compute the signature using the word without accents
-                sig_counts = Anagrammer.word_signature(word_no_accents)
-                sig_str = Anagrammer.signature_to_string(sig_counts)
-                # Store the original word (with accents) in the dictionary
-                signature_dict.setdefault(sig_str, []).append(word)
-    # Save the signature dictionary to JSON
-    with open(json_filename, 'w', encoding='utf-8') as f:
-        json.dump(signature_dict, f, ensure_ascii=False)
-
-def load_signature_dictionary(json_filename):
-    with open(json_filename, 'r', encoding='utf-8') as f:
-        signature_dict = json.load(f)
-    return signature_dict
+    @staticmethod
+    def build_signature_dictionary(wordlist_filename, json_filename):
+        signature_dict = {}
+        with open(wordlist_filename, 'r', encoding='utf-8') as f:
+            for line in f:
+                word = line.strip()
+                if word:
+                    # Strip accents from the word
+                    word_no_accents = Anagrammer.strip_accents(word.lower())
+                    # Compute the signature using the word without accents
+                    sig_counts = Anagrammer.word_signature(word_no_accents)
+                    sig_str = Anagrammer.signature_to_string(sig_counts)
+                    # Store the original word (with accents) in the dictionary
+                    signature_dict.setdefault(sig_str, []).append(word)
+        # Save the signature dictionary to JSON
+        with open(json_filename, 'w', encoding='utf-8') as f:
+            json.dump(signature_dict, f, ensure_ascii=False)
+    
+    @staticmethod
+    def load_signature_dictionary(json_filename):
+        with open(json_filename, 'r', encoding='utf-8') as f:
+            signature_dict = json.load(f)
+        return signature_dict
